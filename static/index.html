@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CloudNotify | Home</title>
+<link rel="stylesheet" href="style.css">
+<style>
+* { box-sizing: border-box; }
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f5f7ff;
+    color: #172554;
+}
+header {
+    background: #172554;
+    color: white;
+    padding: 20px 7%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+header h2 { margin: 0; font-size: 25px; }
+nav { display: flex; gap: 22px; flex-wrap: wrap; }
+nav a {
+    color: #e0e7ff;
+    text-decoration: none;
+    font-size: 14px;
+}
+nav a:hover { color: white; }
+.hero {
+    text-align: center;
+    padding: 100px 20px;
+    color: white;
+    background: linear-gradient(130deg, #172554, #4338ca);
+}
+.hero h1 {
+    font-size: clamp(32px, 5vw, 52px);
+    margin: 0 0 18px;
+}
+.hero p {
+    max-width: 650px;
+    margin: 0 auto 30px;
+    line-height: 1.8;
+    color: #dbeafe;
+    font-size: 17px;
+}
+.btn {
+    display: inline-block;
+    padding: 14px 25px;
+    background: white;
+    color: #3730a3;
+    border-radius: 9px;
+    font-weight: bold;
+    text-decoration: none;
+}
+.btn:hover { background: #e0e7ff; }
+.features {
+    max-width: 1100px;
+    margin: 60px auto;
+    padding: 0 20px;
+    text-align: center;
+}
+.features h2 { font-size: 29px; }
+.subtitle { color: #64748b; margin-bottom: 35px; }
+.cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 22px;
+}
+.card {
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 15px;
+    padding: 30px 22px;
+    text-align: left;
+    box-shadow: 0 5px 20px #1725540b;
+}
+.card .symbol {
+    width: 48px;
+    height: 48px;
+    display: grid;
+    place-items: center;
+    background: #eef2ff;
+    color: #4338ca;
+    border-radius: 12px;
+    font-size: 23px;
+}
+.card h3 { margin-bottom: 10px; }
+.card p { color: #64748b; line-height: 1.7; }
+footer {
+    background: #172554;
+    color: #cbd5e1;
+    text-align: center;
+    padding: 25px 15px;
+    font-size: 13px;
+}
+</style>
+</head>
+<body>
+
+<header>
+    <h2>☁ CloudNotify</h2>
+    <nav>
+        <a href="/">Home</a>
+        <a href="/notify">Notifications</a>
+        <a href="/api/health" target="_blank">System Status</a>
+    </nav>
+</header>
+
+<section class="hero">
+    <h1>Smart Serverless Notifications</h1>
+    <p>
+        Send, manage and monitor notifications with a cloud-based
+        messaging system powered by AWS SNS, Amazon SQS,
+        Python Flask and LocalStack.
+    </p>
+    <a href="/notify" class="btn">Open Notification Dashboard →</a>
+</section>
+
+<section class="features">
+    <h2>Powerful Cloud Messaging</h2>
+    <p class="subtitle">Explore the technologies behind CloudNotify.</p>
+
+    <div class="cards">
+        <div class="card">
+            <div class="symbol">☁</div>
+            <h3>AWS SNS</h3>
+            <p>
+                Publish notifications through Amazon Simple
+                Notification Service.
+            </p>
+        </div>
+
+        <div class="card">
+            <div class="symbol">▤</div>
+            <h3>Amazon SQS</h3>
+            <p>
+                Receive, store and manage messages through
+                a reliable queue.
+            </p>
+        </div>
+
+        <div class="card">
+            <div class="symbol">⚙</div>
+            <h3>LocalStack</h3>
+            <p>
+                Develop and test cloud services locally
+                using Docker.
+            </p>
+        </div>
+    </div>
+</section>
+
+<footer>
+    <p>CloudNotify | Serverless Notification System</p>
+    <p>Developed using Python Flask, AWS SNS, SQS and Docker</p>
+</footer>
+
+</body>
+</html>

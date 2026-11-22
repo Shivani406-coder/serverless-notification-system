@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CloudNotify | Dashboard</title>
+
+<style>
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f1f5f9;
+    color: #1e293b;
+}
+
+header {
+    background: linear-gradient(120deg, #172554, #4338ca);
+    color: white;
+    padding: 24px 7%;
+}
+
+.header-inner {
+    max-width: 1100px;
+    margin: auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+header h1 { margin: 0; font-size: 25px; }
+
+nav { display: flex; gap: 20px; flex-wrap: wrap; }
+
+nav a {
+    color: #e0e7ff;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+nav a:hover { color: white; }
+
+main {
+    max-width: 1050px;
+    margin: 35px auto;
+    padding: 0 18px;
+}
+
+.welcome { margin-bottom: 25px; }
+.welcome h2 { margin-bottom: 7px; }
+.muted { color: #64748b; font-size: 13px; }
+
+.stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.stat, .panel {
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+    box-shadow: 0 4px 15px rgba(15,23,42,.05);
+}
+
+.stat { padding: 20px; }
+.stat span { color: #64748b; font-size: 13px; }
+.stat strong {
+    display: block;
+    font-size: 26px;
+    margin-top: 9px;
+    color: #172554;
+}
+
+.panel {
+    padding: 25px;
+    margin-bottom: 22px;
+}
+
+.panel h2 {
+    margin-top: 0;
+    color: #172554;
+    font-size: 20px;
+}
+
+label {
+    display: block;
+    font-weight: bold;
+    font-size: 14px;
+    margin: 17px 0 8px;
+}
+
+input, textarea {
+    width: 100%;
+    padding: 13px;
+    border: 1px solid #cbd5e1;
+    border-radius: 9px;
+    font-size: 15px;
+    font-family: inherit;
+    outline: none;
+}
+
+input:focus, textarea:focus {
+    border-color: #4f46e5;
+    box-shadow: 0 0 0 3px #4f46e51c;
+}
+
+textarea { min-height: 115px; resize: vertical; }
+
+button {
+    border: none;
+    border-radius: 9px;
+    padding: 12px 18px;
+    color: white;
+    background: #4f46e5;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 15px;
+}
+
+button:hover { filter: brightness(.92); }
+button:disabled { opacity: .6; cursor: wait; }
+
+.refresh-btn { background: #334155; }
+.delete-btn { background: #dc2626; }
+
+#status {
+    margin-top: 15px;
+    padding: 12px;
+    border-radius: 8px;
+    overflow-wrap: anywhere;
+    font-size: 14px;
+}
+
+.message-card {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-left: 5px solid #4f46e5;
+    border-radius: 10px;
+    padding: 19px;
+    margin-top: 15px;
+    overflow-wrap: anywhere;
+}
+
+.message-card h3 { color: #15803d; margin-top: 0; }
+.message-text {
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 14px;
+    margin-top: 8px;
+    white-space: pre-wrap;
+}
+
+.empty {
+    padding: 25px;
+    text-align: center;
+    color: #64748b;
+    background: #f8fafc;
+    border-radius: 10px;
+    margin-top: 18px;
+}
+
+footer {
+    text-align: center;
+    padding: 25px;
+    color: #64748b;
+    font-size: 13px;
+}
+
+@media(max-width: 600px) {
+    .header-inner { align-items: flex-start; flex-direction: column; }
+    .panel { padding: 18px; }
+    main { margin-top: 24px; }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <div class="header-inner">
+        <h1>☁ CloudNotify</h1>
+        <nav>
+            <a href="/">Home</a>
+            <a href="/notify">Notifications</a>
+            <a href="/api/health" target="_blank">System Status</a>
+        </nav>
+    </div>
+</header>
+
+<main>
+    <div class="welcome">
+        <h2>Notification Dashboard</h2>
+        <p class="muted">Send, receive and manage your cloud notifications.</p>
+    </div>
+
+    <div class="stats">
+        <div class="stat">
+            <span>Messaging Service</span>
+            <strong>AWS SNS</strong>
+        </div>
+        <div class="stat">
+            <span>Message Queue</span>
+            <strong>Amazon SQS</strong>
+        </div>
+        <div class="stat">
+            <span>Environment</span>
+            <strong>LocalStack</strong>
+        </div>
+    </div>
+
+    <section class="panel">
+        <h2>✉ Send a Notification</h2>
+        <p class="muted">Enter the recipient and the notification message.</p>
+
+        <form id="notifyForm">
+            <label for="recipient">Recipient</label>
+            <input type="text" id="recipient"
+                   placeholder="Enter recipient email" required>
+
+            <label for="message">Notification Message</label>
+            <textarea id="message"
+                      placeholder="Write your notification here..."
+                      required></textarea>
+
+            <button type="submit" id="sendButton">
+                Send Notification →
+            </button>
+        </form>
+
+        <p id="status" role="status" aria-live="polite"></p>
+    </section>
+
+    <section class="panel">
+        <h2>▤ Messages in SQS Queue</h2>
+        <p class="muted">
+            Notifications received from SNS and stored in your SQS queue.
+        </p>
+
+        <button class="refresh-btn" id="refresh" type="button">
+            ↻ Refresh Messages
+        </button>
+
+        <div id="messages">
+            <div class="empty">Loading messages...</div>
+        </div>
+    </section>
+</main>
+
+<footer>
+    CloudNotify | Python Flask · AWS SNS · Amazon SQS · Docker
+</footer>
+
+<script>
+const statusBox = document.getElementById("status");
+
+document.getElementById("notifyForm").addEventListener("submit", async function(event) {
+    event.preventDefault();
+
+    const recipient = document.getElementById("recipient").value.trim();
+    const message = document.getElementById("message").value.trim();
+    const sendButton = document.getElementById("sendButton");
+
+    statusBox.textContent = "Sending notification...";
+    sendButton.disabled = true;
+
+    try {
+        const response = await fetch("/api/notify", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ recipient, message })
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+            throw new Error(result.detail || result.error || "Sending failed");
+        }
+
+        const messageId = result.results?.localstack?.message_id || "Not available";
+
+        statusBox.textContent =
+            result.detail + " LocalStack Message ID: " + messageId;
+
+        statusBox.style.background = "#dcfce7";
+        statusBox.style.color = "#166534";
+
+        document.getElementById("message").value = "";
+        await refreshMessages();
+
+    } catch (error) {
+        statusBox.textContent = "Error: " + error.message;
+        statusBox.style.background = "#fee2e2";
+        statusBox.style.color = "#991b1b";
+    } finally {
+        sendButton.disabled = false;
+    }
+});
+
+async function refreshMessages() {
+    const container = document.getElementById("messages");
+    container.textContent = "Loading messages...";
+
+    try {
+        const response = await fetch("/api/messages");
+        const result = await response.json();
+
+        if (!response.ok) {
+            throw new Error(result.error || "Unable to load messages");
+        }
+
+        container.replaceChildren();
+
+        const messages = result.messages || [];
+
+        if (messages.length === 0) {
+            const empty = document.createElement("div");
+            empty.className = "empty";
+            empty.textContent = "No messages currently available.";
+            container.appendChild(empty);
+            return;
+        }
+
+        messages.forEach(function(item) {
+            let notification = {};
+
+            try {
+                notification = JSON.parse(item.body);
+            } catch {
+                notification = { Message: item.body };
+            }
+
+            const fullMessage = notification.Message || item.body;
+            let recipient = "Not specified";
+            let actualMessage = fullMessage;
+
+            const match = fullMessage.match(/^To:\s*(.+?)(?:\r?\n|$)/);
+
+            if (match) {
+                recipient = match[1].trim();
+                actualMessage = fullMessage
+                    .replace(/^To:\s*.+?(?:\r?\n\r?\n?)/, "")
+                    .trim();
+            }
+
+            const card = document.createElement("div");
+            card.className = "message-card";
+
+            const heading = document.createElement("h3");
+            heading.textContent = "✓ Notification Received";
+            card.appendChild(heading);
+
+            const recipientText = document.createElement("p");
+            recipientText.textContent = "Recipient: " + recipient;
+            card.appendChild(recipientText);
+
+            const label = document.createElement("strong");
+            label.textContent = "Message:";
+            card.appendChild(label);
+
+            const messageBox = document.createElement("div");
+            messageBox.className = "message-text";
+            messageBox.textContent = actualMessage;
+            card.appendChild(messageBox);
+
+            const time = document.createElement("p");
+            time.className = "muted";
+            time.textContent = notification.Timestamp
+                ? "Received: " + new Date(notification.Timestamp).toLocaleString()
+                : "Notification received";
+            card.appendChild(time);
+
+            const id = document.createElement("p");
+            id.className = "muted";
+            id.textContent = "Message ID: " +
+                (notification.MessageId || item.message_id);
+            card.appendChild(id);
+
+            const remove = document.createElement("button");
+            remove.className = "delete-btn";
+            remove.textContent = "Delete from Queue";
+
+            remove.addEventListener("click", async function() {
+                remove.disabled = true;
+                remove.textContent = "Deleting...";
+
+                try {
+                    const deletion = await fetch("/api/messages", {
+                        method: "DELETE",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                            receipt_handle: item.receipt_handle
+                        })
+                    });
+
+                    const deleteResult = await deletion.json();
+
+                    if (!deletion.ok) {
+                        throw new Error(deleteResult.error || "Delete failed");
+                    }
+
+                    await refreshMessages();
+
+                } catch (error) {
+                    remove.disabled = false;
+                    remove.textContent = "Delete from Queue";
+                    alert("Error: " + error.message);
+                }
+            });
+
+            card.appendChild(remove);
+            container.appendChild(card);
+        });
+
+    } catch (error) {
+        container.textContent = "Error loading messages: " + error.message;
+    }
+}
+
+document.getElementById("refresh").addEventListener("click", refreshMessages);
+refreshMessages();
+</script>
+
+</body>
+</html>
